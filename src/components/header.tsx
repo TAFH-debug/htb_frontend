@@ -3,7 +3,7 @@ import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button} from "@nex
 export function Header() {
     return <Navbar>
     <NavbarBrand>
-      <p className="font-bold text-inherit">ACME</p>
+      <p className="font-bold text-inherit"><a href="/">ACME</a></p>
     </NavbarBrand>
     <NavbarContent className="hidden sm:flex gap-4" justify="center">
       <NavbarItem>
@@ -24,10 +24,10 @@ export function Header() {
     </NavbarContent>
     <NavbarContent justify="end">
       <NavbarItem className="hidden lg:flex">
-        <Link href="#">Sign In</Link>
+        <Link href="/signin">Sign In</Link>
       </NavbarItem>
       <NavbarItem>
-        <Button as={Link} color="primary" href="#" variant="flat">
+        <Button as={Link} color="primary" href="/signup" variant="flat">
           Sign Up
         </Button>
       </NavbarItem>

@@ -40,7 +40,7 @@ export default function Page() {
 
     const checkQuiz = (index: number) => async () => {
         try {
-            if (index === dailyQuiz.correctAnswer) {
+            if (index === dailyQuiz?.correctAnswer) {
                 await axiosInstance.patch("/daily-answer");
             }
         } catch (error) {

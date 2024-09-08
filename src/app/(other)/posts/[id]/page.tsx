@@ -52,9 +52,12 @@ export default function Page() {
                 <h1 className="font-bold text-2xl">{post?.title}</h1>
                 <h2 className="text-default-500">{post?.user?.name} {post?.user?.surname}</h2>
             </div>
-            <Button color="primary" className="min-w-0" onClick={patchLike}>
-                <AiOutlineLike />
-            </Button>
+            <div>
+                <h1 className="font-semibold text-xl text-primary">{post?.likedIDs?.length} Likes</h1>
+                <Button color="primary" className="min-w-0" onClick={patchLike}>
+                    <AiOutlineLike />
+                </Button>
+            </div>
         </div>
         <div className="m-2">
             <p>{post?.text}</p>

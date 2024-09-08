@@ -5,6 +5,7 @@ export type Book = {
     description: string;
     comments: Comment[];
     archive_url: string;
+    likedUsersIDs?: string[];
     preview_url: string;
 }
 
@@ -41,6 +42,7 @@ export type Post = {
     title: string;
     text: string;
     user?: User;
+    likedIDs?: string[];
     comments?: Comment[];
 }
 

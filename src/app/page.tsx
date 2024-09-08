@@ -8,7 +8,7 @@ export default function Home() {
       window.location.href = '/dashboard'
     }
     else {
-      window.location.href = '/login'
+      window.location.href = '/signin'
     }
   }, []);
 

@@ -77,6 +77,7 @@ export default function Page() {
                     <div className="m-5">
                         <h1 className="font-bold text-3xl">{book?.title}</h1>
                         <h2 className="text-default-500">{book?.author}</h2>
+                        <h2 className="text-primary">{book.likedUsersIDs?.length} likes</h2>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">

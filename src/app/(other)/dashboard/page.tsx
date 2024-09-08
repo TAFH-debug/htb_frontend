@@ -8,7 +8,11 @@ import { useEffect, useState } from "react";
 export default function Page() {
     const [user, setUser] = useState<User | null>(null);
     const [topBooks, setTopBooks] = useState<Book[]>([]);
-    const [dailyQuiz, setDailyQuiz] = useState<any | null>(null);
+    const [dailyQuiz, setDailyQuiz] = useState<{
+        question: string,
+        answers: string[],
+        correctAnswer: number
+    } | null>(null);
     const [choosen, setChoosen] = useState<number | null>(null);
 
     useEffect(() => {

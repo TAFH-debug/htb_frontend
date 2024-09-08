@@ -3,6 +3,7 @@ export type Book = {
     title: string;
     author: string;
     description: string;
+    comments: Comment[];
     archive_url: string;
     preview_url: string;
 }
@@ -27,9 +28,12 @@ export type User = {
     email: string;
     surname: string;
     about: string;
+    score: number;
     books?: Book[];
     clubs?: Club[];
     bookshelfs?: Bookshelf[];
+    favorites?: Book[];
+    clubPosts?: Post[];
 }
 
 export type Post = {
@@ -37,4 +41,13 @@ export type Post = {
     title: string;
     text: string;
     user?: User;
+    comments?: Comment[];
+}
+
+export type Comment = {
+    id: string;
+    text: string;
+    user?: User;
+    book?: Book;
+    clubPost?: Post;
 }

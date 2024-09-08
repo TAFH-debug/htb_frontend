@@ -4,7 +4,7 @@ import { AiOutlineBook, AiOutlineComment, AiOutlineDashboard, AiOutlineGroup } f
 export function Sidebar({ children }: { children: React.ReactNode }) {
     return <div className='w-full flex'>
         <div className="w-1/6 h-full">
-            <Button className='w-full mx-1' as={Link} href="#" variant="light">
+            <Button className='w-full mx-1' as={Link} href="/dashboard" variant="light">
               <AiOutlineDashboard /><span>Dashboard</span>
             </Button>
             <Button className='w-full mx-1' as={Link} href="/bookshelfs" variant="light">
@@ -13,7 +13,7 @@ export function Sidebar({ children }: { children: React.ReactNode }) {
             <Button className='w-full mx-1' as={Link} href="/clubs" variant="light">
                 <AiOutlineComment /><span>Clubs</span>
             </Button>
-            <Button className='w-full mx-1' as={Link} href="/clubs" variant="light">
+            <Button className='w-full mx-1' as={Link} href="/books" variant="light">
                 <AiOutlineBook /><span>Books</span>
             </Button>
         </div>

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { AiFillBook, AiFillPlusCircle } from "react-icons/ai";
 
 export default function Page() {
-    const [logined, setLogined] = useState(true);
+    const [logined, setLogined] = useState(false);
     
     if (!logined) {
         return <AdminLogin setLogined={setLogined} />
@@ -63,6 +63,13 @@ function AddBookAction() {
     const postNewBook = async () => {
         try {
             await axiosInstance.post('/books', bookData);
+            setBookData({
+                title: "",
+                author: "",
+                description: "",
+                archive_url: "",
+                preview_url: "",
+            })
         } catch (error) {
             console.log(error);
             alert('An error occurred');

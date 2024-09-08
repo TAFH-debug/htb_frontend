@@ -1,35 +1,33 @@
-'use client';
+"use client";
 import axiosInstance from "@/axiosInstance";
 import { PostCard } from "@/components/postCard";
-import { Club } from "@/types/types";
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from "@nextui-org/react";
+import { User } from "@/types/types";
+import { Button, Input, Modal, ModalContent, ModalHeader, ModalBody, Textarea, ModalFooter, useDisclosure, Spinner, Card } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 
-export default function ClubPage() {
+export default function Page() {
     const { id } = useParams();
-
-    const [club, setClub] = useState<Club | null>(null);
-    const [isPresident, setIsPresident] = useState(false);
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [postData, setPostData] = useState({ title: '', text: '' });
+    const [user, setUser] = useState<User | null>(null);
+    const [isThisUser, setIsThisUser] = useState(false);
 
     useEffect(() => {
-        async function fetchClub() {
-            const user = (await axiosInstance.get("/users/me")).data;
-            const club = await axiosInstance.get(`/clubs/${id}`);
-            setClub(club.data);
-            setIsPresident(club.data.president?.id === user.id);
+        async function fetchUser() {
+            const user = (await axiosInstance.get(`/users/${id}`)).data;
+            const myUser = (await axiosInstance.get(`/users/me`)).data;
+            setIsThisUser(myUser.id === user.id);
+            setUser(user);
         }
-        fetchClub();
+        fetchUser();
     }, [id]);
-
+    
     const postNewPost = async () => {
         try {
             await axiosInstance.post(`/club-posts`, {
                 ...postData,
-                clubID: id,
             });
             setPostData({ title: '', text: '' });
             window.location.reload();
@@ -39,11 +37,27 @@ export default function ClubPage() {
         }
     }
 
-    return <div className="w-full flex items-center flex-col">
-        <div className="flex my-3 justify-between md:w-1/3">
-            <h1 className="m-2 text-xl font-bold">Club posts</h1>
+    if (!user) {
+        return <div className="w-full flex items-center flex-col">
+            <Spinner />
+        </div>
+    }
+
+    return <div className="w-full flex flex-col items-center">
+    <Card className="w-2/3 flex items-center flex-col p-4 m-2">
+        <div className="flex justify-between w-full m-3 items-center">
+            <div>
+                <h1 className="font-bold text-2xl mx-2">{user?.name} {user?.surname}</h1>
+                <p className="mx-2">Email: {user?.email}</p>
+            </div>
+            <div className="font-semibold text-xl text-primary m-2">
+                {`Level ${Math.floor(user!.score / 100)}`}
+            </div>
+        </div>
+        <div className="flex justify-between w-full m-3">
+            <h1 className="m-2 text-xl font-bold">User posts</h1>
             {
-                isPresident &&
+                isThisUser &&
                 <Button color="primary" className="min-w-0" onClick={onOpen}><AiOutlinePlus /></Button>   
             }
             <Modal 
@@ -88,10 +102,11 @@ export default function ClubPage() {
                 </ModalContent>
             </Modal>
         </div>
-        <div className="flex flex-col justify-center md:w-1/3">
+        <div className="flex flex-col justify-center">
         {
-            club?.clubPosts?.map(post => <PostCard key={post.id} {...post} />)
+            user?.clubPosts?.map(post => <PostCard key={post.id} {...post} />)
         }
         </div>
-    </div>;
+    </Card>
+    </div>
 }

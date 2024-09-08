@@ -1,8 +1,9 @@
 'use client';
 import axiosInstance from "@/axiosInstance";
 import { useUpload } from "@/hooks/hooks";
-import { Button, Card, CardHeader, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from "@nextui-org/react";
-import { useState } from "react";
+import { Book, User } from "@/types/types";
+import { Autocomplete, AutocompleteItem, Button, Card, CardHeader, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import { AiFillBook, AiFillPlusCircle } from "react-icons/ai";
 
 export default function Page() {
@@ -15,6 +16,8 @@ export default function Page() {
     return <div className="flex w-full min-h-screen items-center flex-col justify-center gap-3">
         <h1 className="text-3xl font-bold">Admin actions</h1>
         <AddBookAction />
+        <TransferBookAction />
+        <UnattachBookAction />
     </div>
 }
 
@@ -154,6 +157,177 @@ function AddBookAction() {
         </ModalContent>
     </Modal>
     </>
+}
+
+function TransferBookAction() {
+    const [books, setBooks] = useState<Book[]>([]); 
+    const [users, setUsers] = useState<User[]>([]); 
+
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [userID, setUserID] = useState('');
+    const [bookID, setBookID] = useState('');
+
+    useEffect(() => {
+        const getBooks = async () => {
+            try {
+                const books = await axiosInstance.get('/books');
+                setBooks(books.data);
+                const users = await axiosInstance.get('/users');
+                setUsers(users.data);
+            } catch (error) {
+                console.log(error);
+                alert('An error occurred');
+            }
+        }
+        getBooks();
+    }, []);
+
+    const transferBook = async () => {
+        console.log(bookID, userID);
+        try {
+            await axiosInstance.patch(`/books/${bookID}/transfer`, { userID });
+        } catch (error) {
+            console.log(error);
+            alert('An error occurred');
+        }
+    }
+
+    return <>
+    <Card className="md:w-1/6 bg-primary text-background" isPressable isBlurred onPress={onOpen}>
+        <CardHeader className="flex justify-between">
+            <div className="flex gap-3 items-center">
+                <AiFillBook />
+                <p>Bind book</p>
+            </div>
+            <AiFillPlusCircle />
+        </CardHeader>
+    </Card>
+    <Modal 
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange} 
+    >
+        <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex flex-col gap-1">Add new book</ModalHeader>
+            <ModalBody>
+                <Autocomplete
+                    label="Book"
+                    selectedKey={bookID}
+                    onSelectionChange={(e) => setBookID(e!.toString())}
+                >
+                    {books.map((book) => (
+                        <AutocompleteItem key={book.id}>
+                            {book.title}
+                        </AutocompleteItem>
+                    ))}
+                </Autocomplete>
+                <Autocomplete
+                    label="To user"
+                    selectedKey={userID}
+                    onSelectionChange={(e) => setUserID(e!.toString())}
+                >
+                    {users.map((book) => (
+                        <AutocompleteItem key={book.id}>
+                            {book.name + " " + book.surname}
+                        </AutocompleteItem>
+                    ))}
+                </Autocomplete>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" variant="light" onPress={onClose}>
+                Close
+              </Button>
+              <Button color="primary" onPress={() => {
+                transferBook();
+                onClose();
+              }}>
+                Add
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+        </ModalContent>
+    </Modal>
+</>
+}
+
+function UnattachBookAction() {
+    const [books, setBooks] = useState<Book[]>([]); 
+
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [bookID, setBookID] = useState('');
+
+    useEffect(() => {
+        const getBooks = async () => {
+            try {
+                const books = await axiosInstance.get('/books');
+                setBooks(books.data);
+            } catch (error) {
+                console.log(error);
+                alert('An error occurred');
+            }
+        }
+        getBooks();
+    }, []);
+
+    const transferBook = async () => {
+        console.log(bookID);
+        try {
+            await axiosInstance.delete(`/books/${bookID}/transfer`);
+        } catch (error) {
+            console.log(error);
+            alert('An error occurred');
+        }
+    }
+
+    return <>
+    <Card className="md:w-1/6 bg-primary text-background" isPressable isBlurred onPress={onOpen}>
+        <CardHeader className="flex justify-between">
+            <div className="flex gap-3 items-center">
+                <AiFillBook />
+                <p>Unbind book</p>
+            </div>
+            <AiFillPlusCircle />
+        </CardHeader>
+    </Card>
+    <Modal 
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange} 
+    >
+        <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex flex-col gap-1">Add new book</ModalHeader>
+            <ModalBody>
+                <Autocomplete
+                    label="Book"
+                    selectedKey={bookID}
+                    onSelectionChange={(e) => setBookID(e!.toString())}
+                >
+                    {books.map((book) => (
+                        <AutocompleteItem key={book.id}>
+                            {book.title}
+                        </AutocompleteItem>
+                    ))}
+                </Autocomplete>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" variant="light" onPress={onClose}>
+                Close
+              </Button>
+              <Button color="primary" onPress={() => {
+                transferBook();
+                onClose();
+              }}>
+                Add
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+        </ModalContent>
+    </Modal>
+</>
 }
 
 function AdminLogin({ setLogined }: { setLogined: (logined: boolean) => void }) {

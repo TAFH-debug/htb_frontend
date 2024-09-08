@@ -1,8 +1,9 @@
 "use client";
 import axiosInstance from "@/axiosInstance";
+import BookCard from "@/components/bookCard";
 import { PostCard } from "@/components/postCard";
 import { User } from "@/types/types";
-import { Button, Input, Modal, ModalContent, ModalHeader, ModalBody, Textarea, ModalFooter, useDisclosure, Spinner, Card } from "@nextui-org/react";
+import { Button, Input, Modal, ModalContent, ModalHeader, ModalBody, Textarea, ModalFooter, useDisclosure, Spinner, Card, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -53,6 +54,20 @@ export default function Page() {
             <div className="font-semibold text-xl text-primary m-2">
                 {`Level ${Math.floor(user!.score / 100)}`}
             </div>
+            <Dropdown>
+              <DropdownTrigger>
+              <Button color="primary" variant="ghost">Exchange book</Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                {
+                    user?.books?.map((book, index) => {
+                        return <DropdownItem key={index} onClick={() => {}}>
+                            {book.title}
+                        </DropdownItem>
+                    }) || <></>
+                }
+              </DropdownMenu>
+            </Dropdown>
         </div>
         <div className="flex justify-between w-full m-3">
             <h1 className="m-2 text-xl font-bold">User posts</h1>
@@ -105,6 +120,14 @@ export default function Page() {
         <div className="flex flex-col justify-center">
         {
             user?.clubPosts?.map(post => <PostCard key={post.id} {...post} />)
+        }
+        </div>
+        <div className="flex justify-between w-full m-3">
+            <h1 className="m-2 text-xl font-bold">User books</h1>
+        </div>
+        <div className="flex flex-col justify-center">
+        {
+            user?.books?.map(book => <BookCard key={book.id} {...book} />)
         }
         </div>
     </Card>
